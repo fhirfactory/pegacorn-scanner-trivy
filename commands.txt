@@ -1,0 +1,11 @@
+# Build Docker image
+docker pull fhirfactory/pegacorn-base-alpine-trivy:1.0.0
+docker build --rm --build-arg IMAGE_BUILD_TIMESTAMP="%date% %time%" -t pegacorn-scanner-trivy:1.0.0-snapshot --file Dockerfile .
+
+# Scan image (If you would like to scan the image on your host machine, you need to mount docker.sock.)
+# Ref: https://hub.docker.com/r/aquasec/trivy
+# Proxy auth required for connecting and updating trivy database over SSL
+# cache volume mount could help reduce scan duration if DB results are cached -- particulary since the container is removed after scan operation
+# In this case, we mount to WSL docker-desktop data location (docker-desktop)
+
+docker run --rm --env HTTP_PROXY=http://http://ACTGOV%5C[Your first name]%20[Your Surname]:[Your Password (URL encoded)]@proxy.test.act.gov.au:9090 --env HTTPS_PROXY=http://ACTGOV%5C[Your first name]%20[Your Surname]:[Your Password (URL encoded)]@proxy.test.act.gov.au:9090 -it -v /e/docker-desktop/data:/root/.cache/ -v /var/run/docker.sock:/var/run/docker.sock pegacorn-scanner-trivy:1.0.0-snapshot --debug image [image_to_scan:tag_value]
