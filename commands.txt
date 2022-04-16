@@ -1,5 +1,5 @@
 # Build Docker image
-docker pull fhirfactory/pegacorn-base-alpine-trivy:1.0.0
+docker pull aquasec/trivy:latest
 docker build --rm --build-arg IMAGE_BUILD_TIMESTAMP="%date% %time%" -t pegacorn-scanner-trivy:1.0.0-snapshot --file Dockerfile .
 
 # Scan image (If you would like to scan the image on your host machine, you need to mount docker.sock.)
